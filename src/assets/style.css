@@ -1,0 +1,42 @@
+body {
+    background-color: #332515;
+    margin: 0px;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    border: none;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+@font-face {
+    font-family: Pixeled;
+    src: url(fonts/Pixeled.ttf);
+}
+
+@font-face {
+    font-family: orange-kid;
+    src: url(fonts/orange-kid.ttf);
+}
+
+@font-face {
+    font-family: smallest-pixel-7;
+    src: url(fonts/smallest-pixel-7.ttf);
+}
+
+/* @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+    html {
+      transform: rotate(-90deg);
+      transform-origin: left top;
+      width: 100vh;
+      overflow-x: hidden;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+} */
