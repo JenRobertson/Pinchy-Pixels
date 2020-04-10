@@ -5,8 +5,8 @@ import { CONFIG } from './config.js';
 import { drawAsset } from './draw.js';
 
 var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY;
-var HEIGHT = 600 * STORE.increase;
-var WIDTH = 600 * STORE.increase;
+var HEIGHT = 400 * STORE.increase;
+var WIDTH = 400 * STORE.increase;
 var VERSION = '1.2.1';
 let mousePositionFix;
 
@@ -15,7 +15,7 @@ const canvasElement = document.createElement("canvas");
 canvasElement.height = HEIGHT;
 canvasElement.width = WIDTH;
 STORE.ctx = canvasElement.getContext("2d", {alpha: false});
-STORE.ctx.imageSmoothingEnabled = false;
+// STORE.ctx.imageSmoothingEnabled = false;
 document.body.append(canvasElement);
 // resize();
 // drawLoadingBar(0);
@@ -30,7 +30,9 @@ window.pagehide = function () {
 }
 
 window.onload = function () {
-    drawAsset(STORE.ctx, {spriteSheet: getSprite('spool'), x: 0, y: 0, spriteWidth: 200, spriteHeight: 200 });
+    setInterval(frame, CONFIG.frameInterval);
+    canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
+    mousePositionFix = getMousePositionFix();
 }
 
 function getItemUnderCursor(){
@@ -87,51 +89,34 @@ function getItemUnderCursorFromArray(array) {
 }
 
 function frame() {
-    //draw
-    drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
-    // drawRect(0,0,10000,10000,'white')
-    if (draggingItem && draggingItem.type !== 'button'){
-        canvasElement.style.cursor = "pointer";
-        draggingItem.x = Math.trunc((cursorX - dragOffsetX) / STORE.increase);
-        draggingItem.y = Math.trunc((cursorY - dragOffsetY) / STORE.increase);
-    };
+    const center = { x: 200, y: 200}
+    const angle = getAngleFromMouse(200, 200, cursorX, cursorY);
 
-    STORE.draggables.sort(function(a, b){return a.bottom() - b.bottom()});
+    const radians = angle * Math.PI / 180;
+    const x = 200;
+    const y = 200;
 
-    STORE.draggables.forEach(function(item) {
-        if (item.SELL_PRICE && isItemEntirelyInsideArea(item, STORE.areas.conveyorSell) && item.right() < 0) {
-            sellItem(item);
-            recordEvent({type: 'SOLD', item});
-        }
-    });
+    // translate and rotate
+    STORE.ctx.translate(x,y);
+    STORE.ctx.rotate(radians);
+    STORE.ctx.translate(-x,-y);
 
-    drawAssets(STORE.areas);
-    drawAssets(STORE.panels.main);
-    drawAssets(STORE.draggables);
-    animateAssets(STORE.draggables);
-    drawAssets(STORE.topLayers);
-    drawTutorial();
-    drawOrderBook();
-    drawText(STORE.moneyAmount, 247, 34, 5, 'black');
-    drawNoticeBoard();
-    drawHutInterior();
-    drawObjectiveComplete();
-    drawFinale();
+    drawAsset(STORE.ctx, {spriteSheet: getSprite('spool'), x: 0, y: 0 });
 
-    // check if needs to pause
-    if(STORE.panels.orderBookPageNumber ||
-        STORE.panels.noMoneyPopupIsOpen ||
-        STORE.panels.noticeBoardIsOpen ||
-        STORE.panels.hutPageNumber ||
-        STORE.panels.finalePageNumber ||
-        STORE.panels.objectiveCompletePopupIsOpen )
-    {
-        STORE.isPaused = true;
-    } else {
-        STORE.isPaused = false;
-    }
+    // untranslate and unrotate
+    STORE.ctx.translate(x, y);
+    STORE.ctx.rotate(-radians);
+    STORE.ctx.translate(-x,-y);
+}
 
-    STORE.lastSeen = Date.now();
+function getAngleFromMouse(centerX, centerY, mouseX, mouseY) {
+    // const calcAngle = Math.atan(opposite / adjacent ) * (180 / Math.PI);
+    const opposite = mouseX - centerX;
+    const adjacent = centerY - mouseY;
+
+    // if mouse is in bottom half then add 180 degrees
+    const orientationFix = mouseY > centerY ? 180 : 0;
+    return (Math.atan(opposite / adjacent) * (180 / Math.PI)) + orientationFix;
 }
 
 function resize (){
@@ -195,23 +180,23 @@ function checkIfAllowedInTutorial(asset){
 function interactMove(x, y, hoverEnabled){
     cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
     cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
-    let hoverItem;
-    if (hoverEnabled && !draggingItem){ //not on mobile, and not currently dragging something
-        hoverItem = getItemUnderCursor();
-    }
+    // let hoverItem;
+    // if (hoverEnabled && !draggingItem){ //not on mobile, and not currently dragging something
+    //     hoverItem = getItemUnderCursor();
+    // }
 
-    if (hoverItem){
-        canvasElement.style.cursor = "pointer";
-        hoverItem.hover = true;
-        STORE.somethingIsHovering = true;
-        if (hoverItem.startHover) {
-            hoverItem.startHover();
-        }
-    }
-    else {
-        canvasElement.style.cursor = "auto"
-        STORE.somethingIsHovering = false;
-    }
+    // if (hoverItem){
+    //     canvasElement.style.cursor = "pointer";
+    //     hoverItem.hover = true;
+    //     STORE.somethingIsHovering = true;
+    //     if (hoverItem.startHover) {
+    //         hoverItem.startHover();
+    //     }
+    // }
+    // else {
+    //     canvasElement.style.cursor = "auto"
+    //     STORE.somethingIsHovering = false;
+    // }
 }
 
 function interactStop(e){
