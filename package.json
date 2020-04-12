@@ -1,7 +1,7 @@
 {
-  "name": "peckin-pixels",
-  "version": "1.2.1",
-  "description": "Javascript canvas chicken game",
+  "name": "pinchy-pixels",
+  "version": "0.0.1",
+  "description": "Javascript canvas crabbing game",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
@@ -9,8 +9,8 @@
     "build-basic": "npm run colourPngs && npm run move",
     "watch": "webpack --watch",
     "release": "npm run build && npm run releaseClearFolder && npm run releaseCopyToFolder",
-    "releaseClearFolder": "del /F /Q D:\\Jennyrobertson-net\\files\\public_html\\games\\peckin_pixels\\*",
-    "releaseCopyToFolder": "xcopy D:\\Projects\\Games\\peckin-pixels\\dist D:\\Jennyrobertson-net\\files\\public_html\\games\\peckin_pixels",
+    "releaseClearFolder": "del /F /Q D:\\Jennyrobertson-net\\files\\public_html\\games\\pinchy_pixels\\*",
+    "releaseCopyToFolder": "xcopy D:\\Projects\\Games\\pinchy-pixels\\dist D:\\Jennyrobertson-net\\files\\public_html\\games\\pinchy_pixels",
     "colourPngs": "node ./src/config/colourPngs.js",
     "resizeImages": "node ./src/config/resize.js",
     "compressImages": "node ./src/config/compress.js",
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JenRobertson/Peckin-Pixels.git"
+    "url": "git+https://github.com/JenRobertson/Pinchy-Pixels.git"
   },
   "author": "Jenny Robertson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JenRobertson/Peckin-Pixels/issues"
+    "url": "https://github.com/JenRobertson/Pinchy-Pixels/issues"
   },
-  "homepage": "https://github.com/JenRobertson/Peckin-Pixels#readme",
+  "homepage": "https://github.com/JenRobertson/Pinchy-Pixels#readme",
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",

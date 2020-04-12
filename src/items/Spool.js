@@ -1,5 +1,5 @@
 import { STORE } from '../store.js';
-import { drawAssetRotated } from '../draw.js';
+import { drawAsset, drawAssetRotated } from '../draw.js';
 import { getSprite } from '../assetLoader.js';
 
 export class Spool {
@@ -9,6 +9,7 @@ export class Spool {
 
         this.spoolSprite = getSprite('spool');
         this.meterSprite = getSprite('spool-meter');
+        this.meterOutlineSprite = getSprite('spool-meter-outline');
 
         this.spoolDiameter = 62;
         this.meterDiameter = 80;
@@ -56,6 +57,8 @@ export class Spool {
             localCenterY: this.meterDiameter * 0.5,
             rotation: this.meterAngle
         });
+
+        drawAsset(STORE.ctx, {spriteSheet: this.meterOutlineSprite, x: this.x - 3, y: this.y - 3});
     }
     getAngleFromMouse({centerX, centerY, cursorX, cursorY}) {
         const opposite = cursorX - centerX;
