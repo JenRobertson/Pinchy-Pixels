@@ -2,11 +2,12 @@ import './assets/style.css';
 import { getSprite } from './assetLoader.js';
 import { STORE } from './store.js';
 import { CONFIG } from './config.js';
-import { drawAsset } from './draw.js';
+import { drawAsset, drawAssetRotated, drawLoadingBar } from './draw.js';
+import { Spool } from './items/Spool.js';
 
-var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY;
-var HEIGHT = 400 * STORE.increase;
-var WIDTH = 400 * STORE.increase;
+var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY, spool;
+var HEIGHT = 181 * STORE.increase;
+var WIDTH = 287 * STORE.increase;
 var VERSION = '1.2.1';
 let mousePositionFix;
 
@@ -15,24 +16,30 @@ const canvasElement = document.createElement("canvas");
 canvasElement.height = HEIGHT;
 canvasElement.width = WIDTH;
 STORE.ctx = canvasElement.getContext("2d", {alpha: false});
-// STORE.ctx.imageSmoothingEnabled = false;
+STORE.ctx.imageSmoothingEnabled = false;
 document.body.append(canvasElement);
-// resize();
+resize();
 // drawLoadingBar(0);
 // setMainVolume();
 
-window.onunload  = function () {
-    save();
-}
+// window.onunload  = function () {
+//     save();
+// }
 
-window.pagehide = function () {
-    save();
-}
+// window.pagehide = function () {
+//     save();
+// }
 
 window.onload = function () {
     setInterval(frame, CONFIG.frameInterval);
     canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
     mousePositionFix = getMousePositionFix();
+    spool = new Spool({x: 100, y: 100});
+}
+
+function frame() {
+    STORE.ctx.clearRect(0, 0, 10000, 10000)
+    spool.draw({x: 100, y: 100, cursorX, cursorY});
 }
 
 function getItemUnderCursor(){
@@ -88,36 +95,6 @@ function getItemUnderCursorFromArray(array) {
     }
 }
 
-function frame() {
-    const center = { x: 200, y: 200}
-    const angle = getAngleFromMouse(200, 200, cursorX, cursorY);
-
-    const radians = angle * Math.PI / 180;
-    const x = 200;
-    const y = 200;
-
-    // translate and rotate
-    STORE.ctx.translate(x,y);
-    STORE.ctx.rotate(radians);
-    STORE.ctx.translate(-x,-y);
-
-    drawAsset(STORE.ctx, {spriteSheet: getSprite('spool'), x: 0, y: 0 });
-
-    // untranslate and unrotate
-    STORE.ctx.translate(x, y);
-    STORE.ctx.rotate(-radians);
-    STORE.ctx.translate(-x,-y);
-}
-
-function getAngleFromMouse(centerX, centerY, mouseX, mouseY) {
-    // const calcAngle = Math.atan(opposite / adjacent ) * (180 / Math.PI);
-    const opposite = mouseX - centerX;
-    const adjacent = centerY - mouseY;
-
-    // if mouse is in bottom half then add 180 degrees
-    const orientationFix = mouseY > centerY ? 180 : 0;
-    return (Math.atan(opposite / adjacent) * (180 / Math.PI)) + orientationFix;
-}
 
 function resize (){
     const canvasRatio = canvasElement.height / canvasElement.width;

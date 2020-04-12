@@ -1,5 +1,5 @@
 
 export let STORE = {
-increase: 1
+increase: 6
 }
 

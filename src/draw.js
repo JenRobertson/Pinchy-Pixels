@@ -67,6 +67,24 @@ export function animateAssets(container) {
     });
 };
 
+export function drawAssetRotated(context, asset) {
+    const center = { x: (asset.x + asset.localCenterX) * STORE.increase, y: (asset.y + asset.localCenterY) * STORE.increase }
+    const angle = asset.rotation;
+    const radians = angle * Math.PI / 180;
+
+    // translate and rotate
+    STORE.ctx.translate(center.x,center.y);
+    STORE.ctx.rotate(radians);
+    STORE.ctx.translate(-center.x,-center.y);
+
+    drawAsset(context, asset);
+
+    // untranslate and unrotate
+    STORE.ctx.translate(center.x, center.y);
+    STORE.ctx.rotate(-radians);
+    STORE.ctx.translate(-center.x,-center.y);
+}
+
 export function drawAsset(context, asset, small) {
     // small is used draw the assets at their small size on the ghost canvas. this helps performance.
     if (!asset.hasOwnProperty('spriteSheet')) return;
