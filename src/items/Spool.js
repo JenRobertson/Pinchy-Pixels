@@ -29,8 +29,8 @@ export class Spool {
     }
     drawSpool({cursorX, cursorY}) {
         this.spoolAngle = this.getAngleFromMouse({
-            centerX: this.x + (this.spoolDiameter * 0.5), 
-            centerY: this.y + (this.spoolDiameter * 0.5), 
+            centerX: (this.x + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
+            centerY: (this.y + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
             cursorX,
             cursorY
         });
@@ -62,13 +62,15 @@ export class Spool {
         // drawAsset(STORE.ctx, {spriteSheet: this.meterOutlineSprite, x: this.x - 3, y: this.y - 3});
     }
     getAngleFromMouse({centerX, centerY, cursorX, cursorY}) {
-        const opposite = cursorX - centerX;
-        const adjacent = centerY - cursorY;
+        // make center of circle 0
+        const x = cursorX - centerX;
+        const y = cursorY - centerY;
     
-        // if mouse is in bottom half then add 180 degrees
-        const orientationFix = cursorY > centerY ? 180 : 0;
-        const angle = (Math.atan(opposite / adjacent) * (180 / Math.PI)) + orientationFix;
+        // works out angle mouse as it, assuming center of circle is 0
+        let angle = Math.atan2(y, x) * 180 / Math.PI;
         const roundAngleTo = 5;
-        return Math.ceil(angle / roundAngleTo) * roundAngleTo;
+        const value = (Math.ceil(angle / roundAngleTo) * roundAngleTo) + 90;
+        // was going from 270 to -85 :(
+        return value < 0 ? value + 360 : value;
     }
 }
