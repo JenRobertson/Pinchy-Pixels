@@ -11,13 +11,12 @@ export class Spool {
         this.meterSprite = getSprite('spool-meter');
         this.meterOutlineSprite = getSprite('spool-meter-outline');
 
-        this.spoolDiameter = 62;
-        this.meterDiameter = 80;
+        this.spoolDiameter = 51;
+        this.meterDiameter = 65;
         this.drawDiff = (this.meterDiameter - this.spoolDiameter ) * 0.5; // 6
 
     }
     draw({x, y, cursorX, cursorY}) {
-        console.log(cursorX, cursorY)
         this.x = x;
         this.y = y;
 
@@ -26,7 +25,6 @@ export class Spool {
         this.meterAngle += this.meterSpeed;
     }
     drawSpool({cursorX, cursorY}) {
-        console.log(cursorX, cursorY)
         const angle = this.getAngleFromMouse({
             centerX: (this.x + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
             centerY: (this.y + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
@@ -58,13 +56,11 @@ export class Spool {
             rotation: this.meterAngle
         });
 
-        drawAsset(STORE.ctx, {spriteSheet: this.meterOutlineSprite, x: this.x - 3, y: this.y - 3});
+        // drawAsset(STORE.ctx, {spriteSheet: this.meterOutlineSprite, x: this.x - 3, y: this.y - 3});
     }
     getAngleFromMouse({centerX, centerY, cursorX, cursorY}) {
         const opposite = cursorX - centerX;
         const adjacent = centerY - cursorY;
-    
-        console.log(cursorX, cursorY)
     
         // if mouse is in bottom half then add 180 degrees
         const orientationFix = cursorY > centerY ? 180 : 0;

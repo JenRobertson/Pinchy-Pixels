@@ -34,12 +34,12 @@ window.onload = function () {
     setInterval(frame, CONFIG.frameInterval);
     canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
     mousePositionFix = getMousePositionFix();
-    spool = new Spool({x: 100, y: 100});
+    spool = new Spool({x: 216, y: 3});
 }
 
 function frame() {
-    STORE.ctx.clearRect(0, 0, 10000, 10000)
-    spool.draw({x: 100, y: 100, cursorX, cursorY});
+    drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
+    spool.draw({x: 216, y: 3, cursorX, cursorY});
 }
 
 function getItemUnderCursor(){
