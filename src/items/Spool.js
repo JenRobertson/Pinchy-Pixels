@@ -4,7 +4,11 @@ import { getSprite } from '../assetLoader.js';
 
 export class Spool {
     constructor({x, y}) {
+        this.x = x;
+        this.y = y;
+
         this.meterAngle = 0;
+        this.spoolAngle = 0;
         this.meterSpeed = 5;
 
         this.spoolSprite = getSprite('spool');
@@ -16,18 +20,17 @@ export class Spool {
         this.drawDiff = (this.meterDiameter - this.spoolDiameter ) * 0.5; // 6
 
     }
-    draw({x, y, cursorX, cursorY}) {
-        this.x = x;
-        this.y = y;
-
+    draw({cursorX, cursorY}) {
         this.drawMeter();
         this.drawSpool({cursorX, cursorY});
-        this.meterAngle += this.meterSpeed;
+        this.meterAngle = (this.meterAngle + this.meterSpeed) % 360;
+
+        console.log(this.spoolAngle);
     }
     drawSpool({cursorX, cursorY}) {
-        const angle = this.getAngleFromMouse({
-            centerX: (this.x + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
-            centerY: (this.y + this.drawDiff + (this.spoolDiameter * 0.5)) * STORE.increase, 
+        this.spoolAngle = this.getAngleFromMouse({
+            centerX: this.x + (this.spoolDiameter * 0.5), 
+            centerY: this.y + (this.spoolDiameter * 0.5), 
             cursorX,
             cursorY
         });
@@ -40,7 +43,7 @@ export class Spool {
             height: this.spoolDiameter,
             localCenterX: this.spoolDiameter * 0.5,
             localCenterY: this.spoolDiameter * 0.5,
-            rotation: angle
+            rotation: this.spoolAngle
         });
 
     }

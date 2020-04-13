@@ -39,7 +39,7 @@ window.onload = function () {
 
 function frame() {
     drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
-    spool.draw({x: 216, y: 3, cursorX, cursorY});
+    spool.draw({cursorX, cursorY});
 }
 
 function getItemUnderCursor(){
