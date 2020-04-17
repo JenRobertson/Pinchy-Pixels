@@ -2,8 +2,9 @@ import './assets/style.css';
 import { getSprite } from './assetLoader.js';
 import { STORE } from './store.js';
 import { CONFIG } from './config.js';
-import { drawAsset, drawAssetRotated, drawLoadingBar } from './draw.js';
+import { drawAsset, drawAssets, drawAssetRotated, drawLoadingBar, animateAssets } from './draw.js';
 import { Spool } from './items/Spool.js';
+import { Crab } from './items/Crab.js';
 
 var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY, spool;
 var HEIGHT = 181 * STORE.increase;
@@ -35,11 +36,18 @@ window.onload = function () {
     canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
     mousePositionFix = getMousePositionFix();
     spool = new Spool({x: 216, y: 3});
+    init();
+}
+
+function init() {
+    new Crab({x: 35, y: 141});
 }
 
 function frame() {
     drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
     spool.draw({cursorX, cursorY});
+    drawAssets(STORE.items);
+    animateAssets(STORE.items);
 }
 
 function getItemUnderCursor(){

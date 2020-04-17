@@ -38,7 +38,7 @@ export class Spool {
         this.drawSpool({cursorX, cursorY});
         this.meterAngle = (this.meterAngle + this.meterSpeed) % 360;
         this.status = this.getStatus();
-        console.log(this.status);
+        // console.log(this.status);
     }
 
     drawSpool({cursorX, cursorY}) {
