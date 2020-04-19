@@ -5,6 +5,7 @@ import { CONFIG } from './config.js';
 import { drawAsset, drawAssets, drawAssetRotated, drawLoadingBar, animateAssets } from './draw.js';
 import { Spool } from './items/Spool.js';
 import { Crab } from './items/Crab.js';
+import { Character } from './items/Character.js';
 
 var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY, spool;
 var HEIGHT = 181 * STORE.increase;
@@ -41,6 +42,7 @@ window.onload = function () {
 
 function init() {
     new Crab({x: 35, y: 146});
+    STORE.character = new Character();
 }
 
 function frame() {
@@ -48,6 +50,7 @@ function frame() {
     spool.draw({cursorX, cursorY});
     drawAssets(STORE.items);
     animateAssets(STORE.items);
+    STORE.character.draw();
 }
 
 function getItemUnderCursor(){
