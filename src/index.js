@@ -38,6 +38,7 @@ window.onload = function () {
     mousePositionFix = getMousePositionFix();
     spool = new Spool({x: 216, y: 3});
     init();
+    window.addEventListener('resize', resize, false);
 }
 
 function init() {
