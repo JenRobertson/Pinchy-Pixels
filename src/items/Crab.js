@@ -43,8 +43,8 @@ export class Crab {
                 break;
             case 'idle':
                 this.nextState = this.states.walking;
-                this.nextDestinationX = randomIntFromInterval(STORE.areas.sand.left, STORE.areas.sand.right - this.spriteWidth);
-                this.nextDestinationY = randomIntFromInterval(STORE.areas.sand.top, STORE.areas.sand.bottom - this.spriteHeight);
+                this.nextDestinationX = randomIntFromInterval(STORE.areas.sand.left, (STORE.areas.sand.right - this.spriteWidth));
+                this.nextDestinationY = randomIntFromInterval(133, STORE.areas.sand.bottom - this.spriteHeight);
                 break;
         }
     };

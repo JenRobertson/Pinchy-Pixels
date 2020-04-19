@@ -40,7 +40,7 @@ window.onload = function () {
 }
 
 function init() {
-    new Crab({x: 35, y: 141});
+    new Crab({x: 35, y: 146});
 }
 
 function frame() {
