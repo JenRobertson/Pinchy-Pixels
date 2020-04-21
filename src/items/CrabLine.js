@@ -2,15 +2,15 @@ import { STORE } from '../store.js';
 import { getSprite } from '../assetLoader.js';
 import { Button } from './Basic.js';
 
-export class Winder {
+export class CrabLine {
     constructor({x, y}) {
         this.x = x;
         this.y = y;
         // this.frame = 0;
         this.grabbable = true;
 
-        this.type = `winder`;
-        this.spriteSheet = getSprite('winder');
+        this.type = `crab-line`;
+        this.spriteSheet = getSprite('crab-line');
 
         this.spriteWidth = 14;
         this.spriteHeight = 10;
@@ -18,7 +18,7 @@ export class Winder {
         this.action = new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
             text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
             clicked: () => {
-                console.log('winder')
+                console.log('crab-line')
             }
         });
 
