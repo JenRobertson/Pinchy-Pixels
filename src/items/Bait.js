@@ -38,7 +38,7 @@ export class Bait {
                 this.x = this.parent.directionFacing === 'right' ? this.parent.x + 20 : this.parent.x - 2;
                 break;
             case 'crab-line': 
-                this.y = this.parent.y;
+                this.y = this.parent.y - 7;
                 this.x = this.parent.x;
                 break;
         }

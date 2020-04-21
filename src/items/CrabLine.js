@@ -25,6 +25,15 @@ export class CrabLine {
             attachBait: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Attach bait', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
+                    this.bait = STORE.character.child;
+                    this.bait.parent = this;
+                    STORE.character.child = null;
+                    this.showActions();
+                }
+            }),
+            castLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Cast crab line', offsetX: 3, offsetY: 12, size: 7 },
+                clicked: () => {
                     console.log('crab-line')
                 }
             })
@@ -33,8 +42,11 @@ export class CrabLine {
         STORE.items.push(this);
     }
     showActions() {
-        if (STORE.character.child && STORE.character.child.type.includes('bait')){
+        this.hideActions();
+        if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) {
             this.actions.attachBait.hidden = false;
+        } else if (this.bait) {
+            this.actions.castLine.hidden = false;
         } else {
             this.actions.grab.hidden = false;
         }
@@ -42,6 +54,7 @@ export class CrabLine {
     hideActions() {
         this.actions.grab.hidden = true;
         this.actions.attachBait.hidden = true;
+        this.actions.castLine.hidden = true;
     }
 }
 
