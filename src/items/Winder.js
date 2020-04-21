@@ -15,8 +15,8 @@ export class Winder {
         this.spriteWidth = 14;
         this.spriteHeight = 10;
 
-        this.action = new Button({ hidden: true, x: this.x - 11, y: 86 , spriteHeight: 17, spriteWidth: 39, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
-            text: { text: 'Grab winder', offsetX: 3, offsetY: 12, size: 7 },
+        this.action = new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
+            text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
             clicked: () => {
                 console.log('winder')
             }

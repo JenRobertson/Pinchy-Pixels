@@ -16,7 +16,7 @@ export class Bait {
         this.spriteHeight = 8;
 
         this.action = new Button({ hidden: true, x: this.x - 11, y: 86 , spriteHeight: 17, spriteWidth: 39, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
-            text: { text: 'GRAB BAIT', offsetX: 5, offsetY: 12, size: 7 },
+            text: { text: 'grab bait', offsetX: 5, offsetY: 12, size: 7 },
             clicked: () => {
                 console.log('BAIT')
             }
