@@ -80,9 +80,10 @@ export class Static extends Basic {
 }
 
 export class Button extends Basic {
-    constructor({x, y, spriteHeight, spriteWidth, imageId, arrayToAddTo, clicked, text}) {
+    constructor({x, y, spriteHeight, spriteWidth, imageId, arrayToAddTo, clicked, text, hidden}) {
         super(x, y, spriteHeight, spriteWidth, imageId);
         this.type = 'button';
+        this.hidden = hidden;
         this.text = text;
         this.clicked = clicked;
         this.defaultSprite = this.spriteSheet;

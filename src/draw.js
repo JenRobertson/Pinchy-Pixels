@@ -87,6 +87,7 @@ export function drawAssetRotated(context, asset) {
 
 export function drawAsset(context, asset, small) {
     // small is used draw the assets at their small size on the ghost canvas. this helps performance.
+    if (asset.hidden) return;
     if (!asset.hasOwnProperty('spriteSheet')) return;
     if (!asset.spriteSheet) return;
 
