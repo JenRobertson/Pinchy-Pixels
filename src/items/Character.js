@@ -14,6 +14,7 @@ export class Character {
         this.spriteSheet = getSprite(`character`);
         this.directionFacing = 'right';
         this.isWalking = false;
+        this.itemWalkedOver = null;
         
         this.frame = 0;
 
@@ -40,15 +41,49 @@ export class Character {
 
         this.keyPresses = {};
     }
-
-    draw() {
+    update() {
         this.handleKeyPresses();
         if (this.isWalking) {
             this.state = this.states.walking;
         } else {
             this.state = this.states.idle;
         }
+        this.updateItemsOnJetty();
+    }
 
+    updateItemsOnJetty() {
+        this.prevItemWalkedOver = this.itemWalkedOver;
+        this.itemWalkedOver = this.getItemWalkedOver();
+
+        // show actions for item
+        if (this.itemWalkedOver) {
+            this.itemWalkedOver.showActions();
+        }
+        // hide previous items actions
+        if (this.prevItemWalkedOver && this.prevItemWalkedOver !== this.itemWalkedOver ) {
+            this.prevItemWalkedOver.hideActions();
+        }
+    }
+
+    getItemWalkedOver() {
+        const leftBoundry = this.x - 5;
+        const rightBoundry = this.x + 15;
+        // item must have grabbable true to be selected
+        const withinRange = STORE.items.filter(item => item.grabbable && item.x > leftBoundry && item.x < rightBoundry);
+        
+        // if more than one item in range
+        if (withinRange.length){
+            const characterCenter = this.x + 15;        
+            // find closest item to character
+            return withinRange.reduce((prev, current) => {
+                return (Math.abs(current.x - characterCenter) < Math.abs(prev.x - characterCenter) ? current : prev);
+            });
+        } 
+        return null;
+    }
+        
+    draw() {
+        this.update();
         drawAsset(STORE.ctx, this);
     }
 
