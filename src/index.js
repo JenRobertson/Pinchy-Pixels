@@ -38,12 +38,12 @@ window.onload = function () {
     initNewGame();
 }
 
-function addGhostCanvas( {
+function addGhostCanvas() {
     const ghostCanvasElement = document.createElement("canvas");
     ghostCanvasElement.height = HEIGHT / STORE.increase;
     ghostCanvasElement.width = WIDTH / STORE.increase;
     gtx = ghostCanvasElement.getContext("2d");
-});
+};
 
 function addListeners() {
     window.addEventListener('resize', resize, false);
