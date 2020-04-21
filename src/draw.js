@@ -1,7 +1,7 @@
 import { STORE } from './store.js';
 import { getSprite } from './assetLoader.js'
 
-export function drawText(text, x, y, size, colour, font = 'Pixeled'){
+export function drawText({text, x, y, size, colour = 'black', font = 'smallest-pixel-7'}){
     if (colour) {
         STORE.ctx.fillStyle = colour;
     }
@@ -186,6 +186,9 @@ export function drawAsset(context, asset, small) {
                 asset.spriteSheet.height * (small ? 1 : STORE.increase)//dheight
             );
         }
+    }
+    if (asset.hasOwnProperty('text') && !small) {
+        drawText(asset.text);
     }
 }
 
