@@ -14,6 +14,7 @@ export let STORE = {
             left: 0
         }
     },
-    items: []
+    items: [],
+    buttons: []
 }
 

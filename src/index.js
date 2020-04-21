@@ -32,50 +32,55 @@ resize();
 
 window.onload = function () {
     setInterval(frame, CONFIG.frameInterval);
-    canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
     mousePositionFix = getMousePositionFix();
-
-    window.addEventListener('resize', resize, false);
+    addGhostCanvas();
+    addListeners();
     initNewGame();
 }
 
+function addGhostCanvas( {
+    const ghostCanvasElement = document.createElement("canvas");
+    ghostCanvasElement.height = HEIGHT / STORE.increase;
+    ghostCanvasElement.width = WIDTH / STORE.increase;
+    gtx = ghostCanvasElement.getContext("2d");
+});
 
+function addListeners() {
+    window.addEventListener('resize', resize, false);
+
+    canvasElement.addEventListener('mousedown',(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        interactStart(e.pageX, e.pageY); 
+    });
+    canvasElement.addEventListener('mousemove', (e) => { interactMove(e.pageX, e.pageY, true)});
+    canvasElement.addEventListener('mouseup', (e) => {interactStop(e)});
+
+    canvasElement.addEventListener('touchstart',(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        interactStart(e.changedTouches[0].pageX, e.changedTouches[0].pageY); 
+    });
+    canvasElement.addEventListener('touchmove',(e) => {
+        e.preventDefault(); 
+        interactMove(e.changedTouches[0].pageX, e.changedTouches[0].pageY, false);
+    });
+    canvasElement.addEventListener('touchend', (e) => {interactStop(e)});
+}
 
 function frame() {
     drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
     STORE.spool.draw({cursorX, cursorY});
 
     drawAssets(STORE.items);
+    drawAssets(STORE.buttons);
     animateAssets(STORE.items);
 
     STORE.character.draw();
 }
 
 function getItemUnderCursor(){
-    if (STORE.panels.objectiveCompletePopupIsOpen){
-        return getItemUnderCursorFromArray(STORE.panels.objectiveCompletePopup);
-    }
-    else if (STORE.panels.noMoneyPopupIsOpen){
-        return getItemUnderCursorFromArray(STORE.panels.noMoneyPopup);
-    }
-    else if (STORE.panels.orderBookPageNumber){
-        return getItemUnderCursorFromArray(STORE.panels.orderBook[STORE.panels.orderBookPageNumber - 1]);
-    }
-    else if (STORE.panels.noticeBoardIsOpen){
-        return getItemUnderCursorFromArray(STORE.panels.noticeBoard);
-    }
-    else if (STORE.panels.hutPageNumber){
-        return getItemUnderCursorFromArray(STORE.panels.hut[STORE.panels.hutPageNumber - 1]);
-    }
-    else if (STORE.panels.tutorialPageNumber){
-        return getItemUnderCursorFromArray([...STORE.draggables, ...STORE.panels.main, ...STORE.instructions[STORE.panels.tutorialPageNumber - 1].buttons]);
-    }
-    else if (STORE.panels.finalePageNumber){
-        return getItemUnderCursorFromArray([...STORE.finale[STORE.panels.finalePageNumber - 1].buttons]);
-    }
-    else {
-        return getItemUnderCursorFromArray([...STORE.draggables, ...STORE.panels.main]);
-    }
+    return getItemUnderCursorFromArray(STORE.buttons);
 }
 
 function getItemUnderCursorFromArray(array) {
@@ -85,7 +90,8 @@ function getItemUnderCursorFromArray(array) {
         const smallCursorX = cursorX / STORE.increase;
         const smallCursorY = cursorY / STORE.increase;
 
-        if (asset.type !== 'static' && checkIfAllowedInTutorial(asset)) {
+        // if (asset.type !== 'static' && checkIfAllowedInTutorial(asset)) {
+        if (asset.type !== 'static') {
             const withinLeft = smallCursorX > asset.left() - 20;
             const withinRight = smallCursorX < asset.right() + 20;
             const withinTop = smallCursorY > asset.top() - 20;
@@ -128,7 +134,7 @@ function getMousePositionFix (){
 };
 
 function interactStart(x, y){
-    startMusic();
+    // startMusic();
     cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
     cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
     draggingItem = getItemUnderCursor();
@@ -166,23 +172,23 @@ function checkIfAllowedInTutorial(asset){
 function interactMove(x, y, hoverEnabled){
     cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
     cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
-    // let hoverItem;
-    // if (hoverEnabled && !draggingItem){ //not on mobile, and not currently dragging something
-    //     hoverItem = getItemUnderCursor();
-    // }
+    let hoverItem;
+    if (hoverEnabled && !draggingItem){ //not on mobile, and not currently dragging something
+        hoverItem = getItemUnderCursor();
+    }
 
-    // if (hoverItem){
-    //     canvasElement.style.cursor = "pointer";
-    //     hoverItem.hover = true;
-    //     STORE.somethingIsHovering = true;
-    //     if (hoverItem.startHover) {
-    //         hoverItem.startHover();
-    //     }
-    // }
-    // else {
-    //     canvasElement.style.cursor = "auto"
-    //     STORE.somethingIsHovering = false;
-    // }
+    if (hoverItem){
+        canvasElement.style.cursor = "pointer";
+        hoverItem.hover = true;
+        STORE.somethingIsHovering = true;
+        if (hoverItem.startHover) {
+            hoverItem.startHover();
+        }
+    }
+    else {
+        canvasElement.style.cursor = "auto"
+        STORE.somethingIsHovering = false;
+    }
 }
 
 function interactStop(e){
