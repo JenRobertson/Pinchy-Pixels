@@ -9,42 +9,39 @@ export class CrabLine {
         // this.frame = 0;
         this.grabbable = true;
 
-        this.type = `crab-line`;
+        this.type = 'crab-line';
         this.spriteSheet = getSprite('crab-line');
 
         this.spriteWidth = 14;
         this.spriteHeight = 10;
 
-        this.action = new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
-            text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
-            clicked: () => {
-                console.log('crab-line')
-            }
-        });
+        this.actions = {
+            grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
+                clicked: () => {
+                    console.log('crab-line')
+                }
+            }),
+            attachBait: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Attach bait', offsetX: 3, offsetY: 12, size: 7 },
+                clicked: () => {
+                    console.log('crab-line')
+                }
+            })
+        }
 
-        // this.states = {
-        //     idle: {
-        //         type: 'idle',
-        //         row: {direction: { left: 0, right: 0}},
-        //         numberOfFrames: 1,
-        //         spriteSpeed: 0.1,
-        //         speed: 0.1,
-        //     },
-        //     walking: {
-        //         type: 'walking',
-        //         row: {direction: { left: 0, right: 0}},
-        //         numberOfFrames: 5,
-        //         spriteSpeed: 0.5,
-        //         speed: 0.5,
-        //     }
-        // };
         STORE.items.push(this);
     }
     showActions() {
-        this.action.hidden = false;
+        if (STORE.character.child && STORE.character.child.type.includes('bait')){
+            this.actions.attachBait.hidden = false;
+        } else {
+            this.actions.grab.hidden = false;
+        }
     }
     hideActions() {
-        this.action.hidden = true;
+        this.actions.grab.hidden = true;
+        this.actions.attachBait.hidden = true;
     }
 }
 

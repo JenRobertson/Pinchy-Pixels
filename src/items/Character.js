@@ -15,6 +15,7 @@ export class Character {
         this.directionFacing = 'right';
         this.isWalking = false;
         this.itemWalkedOver = null;
+        this.child = null;
         
         this.frame = 0;
 

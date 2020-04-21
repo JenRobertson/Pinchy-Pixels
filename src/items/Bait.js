@@ -15,36 +15,39 @@ export class Bait {
         this.spriteWidth = 15;
         this.spriteHeight = 8;
 
-        this.action = new Button({ hidden: true, x: this.x - 11, y: 86 , spriteHeight: 17, spriteWidth: 39, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
+        this.actions = {
+            grab: new Button({ hidden: true, x: this.x - 11, y: 86 , spriteHeight: 17, spriteWidth: 39, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
             text: { text: 'grab bait', offsetX: 5, offsetY: 12, size: 7 },
             clicked: () => {
-                console.log('BAIT')
-            }
-        });
-
-        // this.states = {
-        //     idle: {
-        //         type: 'idle',
-        //         row: {direction: { left: 0, right: 0}},
-        //         numberOfFrames: 1,
-        //         spriteSpeed: 0.1,
-        //         speed: 0.1,
-        //     },
-        //     walking: {
-        //         type: 'walking',
-        //         row: {direction: { left: 0, right: 0}},
-        //         numberOfFrames: 5,
-        //         spriteSpeed: 0.5,
-        //         speed: 0.5,
-        //     }
-        // };
+                this.grabbable = false;
+                this.parent = STORE.character;
+                STORE.character.child = this;
+            }})
+        }
         STORE.items.push(this);
     }
+    update() {
+        if (this.parent){
+            this.alignToParent();
+        }
+    }
+    alignToParent() {
+        switch(this.parent.type) {
+            case 'character': 
+                this.y = 52;
+                this.x = this.parent.directionFacing === 'right' ? this.parent.x + 20 : this.parent.x - 2;
+                break;
+            case 'crab-line': 
+                this.y = this.parent.y;
+                this.x = this.parent.x;
+                break;
+        }
+    }
     showActions() {
-        this.action.hidden = false;
+        this.actions.grab.hidden = false;
         
     }
     hideActions() {
-        this.action.hidden = true;
+        this.actions.grab.hidden = true;
     }
 }
