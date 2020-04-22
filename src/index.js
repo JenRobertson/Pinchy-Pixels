@@ -70,7 +70,7 @@ function addListeners() {
 
 function frame() {
     drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
-    STORE.spool.draw({cursorX, cursorY});
+    // STORE.spool.draw({cursorX, cursorY});
 
     STORE.character.draw();
     drawAssets(STORE.items);

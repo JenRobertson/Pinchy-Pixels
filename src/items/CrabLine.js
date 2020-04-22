@@ -34,12 +34,31 @@ export class CrabLine {
             castLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Cast crab line', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
-                    console.log('crab-line')
+                    this.endPoint = {x: this.x, y: 155};
+
                 }
             })
         }
 
         STORE.items.push(this);
+    }
+    update(){
+        this.draw();
+    }
+    draw() {
+        if (this.endPoint){
+            STORE.ctx.beginPath()
+            STORE.ctx.moveTo(this.x * STORE.increase, this.y * STORE.increase);
+            STORE.ctx.lineTo(this.endPoint.x * STORE.increase, this.endPoint.y * STORE.increase);
+            STORE.ctx.lineWidth = 3;
+            STORE.ctx.stroke();
+
+            this.bait.x = this.endPoint.x;
+            this.bait.y = this.endPoint.y;
+
+        }
+
+        // drawAsset()
     }
     showActions() {
         this.hideActions();
@@ -58,8 +77,3 @@ export class CrabLine {
     }
 }
 
-// STORE.ctx.beginPath()
-// STORE.ctx.moveTo(142 * STORE.increase, 73* STORE.increase);
-// STORE.ctx.lineTo(160* STORE.increase, 173* STORE.increase);
-// STORE.ctx.lineWidth = 2;
-// STORE.ctx.stroke();
