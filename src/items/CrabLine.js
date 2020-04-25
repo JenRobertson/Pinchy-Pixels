@@ -44,6 +44,12 @@ export class CrabLine {
                     this.casting = true;
                     this.showActions();
                 }
+            }),
+            reelLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Reel crab line', offsetX: 3, offsetY: 12, size: 7 },
+                clicked: () => {
+                    this.reeling = true;
+                }
             })
         }
 
@@ -109,8 +115,9 @@ export class CrabLine {
     showActions() {
         this.hideActions();
         if (this.casting) return;
-        if (this.casted) return;
-        if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) { // character holding bait and I do not have bait attached
+        if (this.casted) {
+            this.actions.reelLine.hidden = false;
+        } else if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) { // character holding bait and I do not have bait attached
             this.actions.attachBait.hidden = false;
         } else if (this.bait) {
             this.actions.castLine.hidden = false; // I have bait
@@ -122,6 +129,7 @@ export class CrabLine {
         this.actions.grab.hidden = true;
         this.actions.attachBait.hidden = true;
         this.actions.castLine.hidden = true;
+        this.actions.reelLine.hidden = true;
     }
 }
 
