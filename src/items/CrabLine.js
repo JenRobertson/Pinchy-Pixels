@@ -14,6 +14,10 @@ export class CrabLine {
 
         this.spriteWidth = 14;
         this.spriteHeight = 10;
+        this.dropSpeed = 2;
+
+        this.stringOffset = {x: 7, y: 4}; // where string starts from on crabline
+        this.endPoint = {x: this.x, y: this.y, finalY: 155};
 
         this.actions = {
             grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
@@ -34,8 +38,8 @@ export class CrabLine {
             castLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Cast crab line', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
-                    this.endPoint = {x: this.x, y: 155};
-
+                    this.casting = true;
+                    this.showActions();
                 }
             })
         }
@@ -43,29 +47,45 @@ export class CrabLine {
         STORE.items.push(this);
     }
     update(){
+        if (this.casting) {
+            this.endPoint.y += this.dropSpeed; // animate string down
+            if (this.endPoint.y >= this.endPoint.finalY) {
+                this.casting = false;
+                this.casted = true;
+            }
+        }
         this.draw();
     }
     draw() {
-        if (this.endPoint){
-            STORE.ctx.beginPath()
-            STORE.ctx.moveTo(this.x * STORE.increase, this.y * STORE.increase);
-            STORE.ctx.lineTo(this.endPoint.x * STORE.increase, this.endPoint.y * STORE.increase);
-            STORE.ctx.lineWidth = 3;
-            STORE.ctx.stroke();
+        this.drawLine({
+            startX: this.x + this.stringOffset.x, 
+            startY: this.y + this.stringOffset.y, 
+            endX: this.endPoint.x + this.stringOffset.x,
+            endY: this.endPoint.y + this.stringOffset.x,
+        })
 
+        if (this.bait) { // align bate to end of string
             this.bait.x = this.endPoint.x;
-            this.bait.y = this.endPoint.y;
-
+            this.bait.y = this.endPoint.y + 6;
         }
 
-        // drawAsset()
+    }
+    drawLine({startX, startY, endX, endY}){
+        STORE.ctx.beginPath()
+        STORE.ctx.moveTo(startX * STORE.increase, startY * STORE.increase);
+        STORE.ctx.lineTo(endX * STORE.increase, endY * STORE.increase);
+        STORE.ctx.lineWidth = STORE.increase * 1;
+        STORE.ctx.strokeStyle = '#434343';
+        STORE.ctx.stroke();
     }
     showActions() {
         this.hideActions();
-        if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) {
+        if (this.casting) return;
+        if (this.casted) return;
+        if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) { // character holding bait and I do not have bait attached
             this.actions.attachBait.hidden = false;
         } else if (this.bait) {
-            this.actions.castLine.hidden = false;
+            this.actions.castLine.hidden = false; // I have bait
         } else {
             this.actions.grab.hidden = false;
         }
