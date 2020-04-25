@@ -6,12 +6,12 @@ export let STORE = {
             top: 133,
             bottom: 181,
             right: 287,
-            left: 0
+            left: 1 // making this zero breaks the crabs
         },
         jetty: {
             top: 83,
             right: 260,
-            left: 0
+            left: 1 // making this zero breaks the crabs
         }
     },
     items: [],
