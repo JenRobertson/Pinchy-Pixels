@@ -18,6 +18,7 @@ export class CrabLine {
 
         this.stringOffset = {x: 7, y: 4}; // where string starts from on crabline
         this.endPoint = {x: this.x, y: this.y, finalY: 155};
+        this.sineStep = 0;
 
         this.actions = {
             grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
@@ -57,16 +58,16 @@ export class CrabLine {
         this.draw();
     }
     draw() {
-        this.drawLine({
+        this.drawSine({
             startX: this.x + this.stringOffset.x, 
             startY: this.y + this.stringOffset.y, 
             endX: this.endPoint.x + this.stringOffset.x,
             endY: this.endPoint.y + this.stringOffset.x,
-        })
+        });
 
         if (this.bait) { // align bate to end of string
             this.bait.x = this.endPoint.x;
-            this.bait.y = this.endPoint.y + 6;
+            this.bait.y = this.endPoint.y + 4;
         }
 
     }
@@ -77,6 +78,29 @@ export class CrabLine {
         STORE.ctx.lineWidth = STORE.increase * 1;
         STORE.ctx.strokeStyle = '#434343';
         STORE.ctx.stroke();
+    }
+    drawSine({startX, startY, endX, endY}){ 
+
+        var lengthOfString = (endY - startY) * STORE.increase;
+        var width = 30;
+        var scale = 1;
+
+        STORE.ctx.beginPath();
+        STORE.ctx.lineWidth = STORE.increase * 0.5;
+        STORE.ctx.strokeStyle = "#434343";
+
+        var x = 0;
+        var y = 0;
+        var amplitude = 5;
+        var frequency = 40;
+
+        while (y < lengthOfString) {
+            x = width/2 + amplitude * Math.sin((y+this.sineStep)/frequency);
+            STORE.ctx.lineTo(x + (startX * STORE.increase), y + (startY * STORE.increase));
+            y++;
+        }
+        STORE.ctx.stroke();
+        this.sineStep += 1;
     }
     showActions() {
         this.hideActions();
