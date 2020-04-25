@@ -16,7 +16,7 @@ export class CrabLine {
         this.spriteHeight = 10;
         this.dropSpeed = 2;
 
-        this.stringOffset = {x: 7, y: 4}; // where string starts from on crabline
+        this.stringOffset = {x: 4, y: 4}; // where string starts from on crabline
         this.endPoint = {x: this.x, y: this.y, finalY: 155};
         this.wiggleSpeed = 0.2; // how fast string wiggles
         this.sineAmplitude = 0; // used to control wiggle
@@ -68,8 +68,8 @@ export class CrabLine {
         });
 
         if (this.bait) { // align bate to end of string
-            this.bait.x = this.endPoint.x;
-            this.bait.y = this.endPoint.y + 4;
+            this.bait.x = this.endPoint.x - 1;
+            this.bait.y = this.endPoint.y + 1;
         }
 
     }
