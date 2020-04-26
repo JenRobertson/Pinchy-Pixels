@@ -1,15 +1,16 @@
 import { STORE } from '../store.js';
-import { drawAsset, drawAssetRotated } from '../draw.js';
+import { drawAsset, drawAssetRotated, drawText } from '../draw.js';
 import { getSprite } from '../assetLoader.js';
+import { Button } from './Basic.js';
 
 export class Spool {
-    constructor({x, y}) {
+    constructor({x, y = 92}) {
         this.x = x;
         this.y = y;
 
         this.meterAngle = 0;
         this.spoolAngle = 0;
-        this.meterSpeed = 5;
+        this.meterSpeed = 10;
 
         // How many degrees it extends to on each side of 0
         this.meterGreenArea = 45;
@@ -25,29 +26,61 @@ export class Spool {
 
         this.meterSprite = getSprite('spool-meter');
         this.spoolSprite = getSprite('spool');
-        // this.meterOutlineSprite = getSprite('spool-meter-outline');
+        this.bgSprite = getSprite('spool-bg');
+        this.spriteSheet = this.meterSprite; // clickable sprite
 
         this.spoolDiameter = 51;
         this.meterDiameter = 65;
         this.meterThickness = (this.meterDiameter - this.spoolDiameter ) * 0.5;
 
+        const clickable = {spriteSheet: this.bgSprite, x: this.x, y: this.y};
+        STORE.clickable.push(this);
     }
-
-    draw({cursorX, cursorY}) {
+    dragStart() {
+        this.beingClicked = true;
+    }
+    dragStop() {
+        this.beingClicked = false;
+    }
+    top() {
+        return this.y;
+    }
+    bottom() {
+        return this.y + this.meterDiameter;
+    }
+    left() {
+        return this.x;
+    }
+    right() {
+        return this.x + this.meterDiameter;
+    }
+    draw() {
+        drawAsset(STORE.ctx, {
+            spriteSheet: this.bgSprite,
+            x: this.x - 6,
+            y: this.y - 1
+        });
         this.drawMeter();
-        this.drawSpool({cursorX, cursorY});
+        this.drawSpool();
         this.meterAngle = (this.meterAngle + this.meterSpeed) % 360;
         this.status = this.getStatus();
         // console.log(this.status);
+        drawText({text: 'Click to wind', x: this.x + 13, y: this.y + 70, size: 7})
+        drawText({text: 'Keep the handle inside the green!', x: this.x - 2 , y: this.y + 75, size: 5})
     }
 
-    drawSpool({cursorX, cursorY}) {
-        this.spoolAngle = this.getAngleFromMouse({
-            centerX: (this.x + this.meterThickness + (this.spoolDiameter * 0.5)) * STORE.increase, 
-            centerY: (this.y + this.meterThickness + (this.spoolDiameter * 0.5)) * STORE.increase, 
-            cursorX,
-            cursorY
-        });
+    drawSpool() {
+        const mouseInside = STORE.cursorX / STORE.increase > this.left() && STORE.cursorX  / STORE.increase < this.right() &&  STORE.cursorY  / STORE.increase > this.top() &&  STORE.cursorY  / STORE.increase < this.bottom();
+
+        if (mouseInside && this.beingClicked) {
+
+            this.spoolAngle = this.getAngleFromMouse({
+                centerX: (this.x + this.meterThickness + (this.spoolDiameter * 0.5)) * STORE.increase, 
+                centerY: (this.y + this.meterThickness + (this.spoolDiameter * 0.5)) * STORE.increase, 
+                cursorX: STORE.cursorX,
+                cursorY: STORE.cursorY
+            });
+        }
  
         drawAssetRotated(STORE.ctx, {
             spriteSheet: this.spoolSprite,
@@ -73,8 +106,6 @@ export class Spool {
             localCenterY: this.meterDiameter * 0.5,
             rotation: this.meterAngle
         });
-
-        // drawAsset(STORE.ctx, {spriteSheet: this.meterOutlineSprite, x: this.x - 3, y: this.y - 3});
     }
 
     /* Returns how much spool should rotate based on mouse position */

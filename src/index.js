@@ -4,8 +4,9 @@ import { STORE } from './store.js';
 import { CONFIG } from './config.js';
 import { drawAsset, drawAssets, drawAssetRotated, drawLoadingBar, animateAssets } from './draw.js';
 import { initNewGame } from './init.js'
+import { Spool } from './items/Spool.js';
 
-var gtx, c, cursorX, cursorY, draggingItem, dragOffsetX, dragOffsetY, spool;
+var gtx, c, draggingItem, dragOffsetX, dragOffsetY;
 var HEIGHT = 181 * STORE.increase;
 var WIDTH = 287 * STORE.increase;
 var VERSION = '1.2.1';
@@ -70,8 +71,6 @@ function addListeners() {
 
 function frame() {
     drawAsset(STORE.ctx, {spriteSheet: getSprite('bg'), x: 0, y: 0, spriteWidth: 287, spriteHeight: 181 });
-    // STORE.spool.draw({cursorX, cursorY});
-
     STORE.character.draw();
     drawAssets(STORE.items);
     drawAssets(STORE.buttons);
@@ -80,15 +79,15 @@ function frame() {
 }
 
 function getItemUnderCursor(){
-    return getItemUnderCursorFromArray(STORE.buttons);
+    return getItemUnderCursorFromArray([...STORE.buttons, ...STORE.clickable]);
 }
 
 function getItemUnderCursorFromArray(array) {
     for (let i = array.length -1; i > -1; i--) {
         const asset = array[i];
 
-        const smallCursorX = cursorX / STORE.increase;
-        const smallCursorY = cursorY / STORE.increase;
+        const smallCursorX = STORE.cursorX / STORE.increase;
+        const smallCursorY = STORE.cursorY / STORE.increase;
 
         // if (asset.type !== 'static' && checkIfAllowedInTutorial(asset)) {
         if (asset.type !== 'static') {
@@ -135,13 +134,13 @@ function getMousePositionFix (){
 
 function interactStart(x, y){
     // startMusic();
-    cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
-    cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
+    STORE.cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
+    STORE.cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
     draggingItem = getItemUnderCursor();
-    // console.log('x', cursorX / STORE.increase, 'y', cursorY / STORE.increase);
+
     if (draggingItem && draggingItem.type !== 'button'){
-        dragOffsetX = cursorX - (draggingItem.x * STORE.increase);
-        dragOffsetY = cursorY - (draggingItem.y * STORE.increase);
+        dragOffsetX = STORE.cursorX - (draggingItem.x * STORE.increase);
+        dragOffsetY = STORE.cursorY - (draggingItem.y * STORE.increase);
         // draggingItem.area = null;
 
         if (draggingItem.dragStart){
@@ -170,8 +169,8 @@ function checkIfAllowedInTutorial(asset){
 }
 
 function interactMove(x, y, hoverEnabled){
-    cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
-    cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
+    STORE.cursorX = Math.trunc((x - canvasElement.offsetLeft)  * mousePositionFix);
+    STORE.cursorY = Math.trunc((y- canvasElement.offsetTop) * mousePositionFix);
     let hoverItem;
     if (hoverEnabled && !draggingItem){ //not on mobile, and not currently dragging something
         hoverItem = getItemUnderCursor();
@@ -192,13 +191,14 @@ function interactMove(x, y, hoverEnabled){
 }
 
 function interactStop(e){
+    STORE.isClicking = false;
     if (draggingItem){
         if (draggingItem.type === 'button'){
             draggingItem.clicked();
         } else {
             draggingItem.destinationX = null;
             draggingItem.destinationY = null;
-            draggingItem.area = getArea(draggingItem);
+            // draggingItem.area = getArea(draggingItem);
     
             if (draggingItem.dragStop){
                 draggingItem.dragStop();

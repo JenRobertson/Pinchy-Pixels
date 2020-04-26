@@ -15,6 +15,7 @@ export let STORE = {
         }
     },
     items: [],
-    buttons: []
+    buttons: [],
+    clickable: []
 }
 

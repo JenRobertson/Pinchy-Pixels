@@ -1,6 +1,7 @@
 import { STORE } from '../store.js';
 import { getSprite } from '../assetLoader.js';
 import { Button } from './Basic.js';
+import { Spool } from './Spool.js';
 
 export class CrabLine {
     constructor({x, y}) {
@@ -15,12 +16,15 @@ export class CrabLine {
         this.spriteWidth = 14;
         this.spriteHeight = 10;
         this.dropSpeed = 2;
+        this.raiseSpeed = 0.5;
 
         this.stringOffset = {x: 4, y: 4}; // where string starts from on crabline
         this.endPoint = {x: this.x, y: this.y, finalY: 155};
         this.wiggleSpeed = 0.2; // how fast string wiggles
         this.sineAmplitude = 0; // used to control wiggle
         this.sineDirection = this.wiggleSpeed; // also controls wiggle
+
+        this.spool = new Spool({x: this.x + 30});
 
         this.actions = {
             grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
@@ -50,6 +54,13 @@ export class CrabLine {
                 clicked: () => {
                     this.reeling = true;
                 }
+            }),
+            grabCrab: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Grab crab', offsetX: 3, offsetY: 12, size: 7 },
+                clicked: () => {
+                    this.showActions();
+                    
+                }
             })
         }
 
@@ -64,6 +75,19 @@ export class CrabLine {
             }
         }
         this.draw();
+        if (this.reeling){
+            if (this.spool.status === this.spool.statuses.green){
+                this.endPoint.y-= this.raiseSpeed;
+                if (this.endPoint.y <= this.y){ // reached the top
+                    this.reeling = false;
+                    this.reeled = true;
+                }
+            } else if (this.spool.status === this.spool.statuses.red){
+                if (this.endPoint.y < this.endPoint.finalY){ // reached the bottom
+                    this.endPoint.y += this.dropSpeed;
+                }
+            }
+        }
     }
     draw() {
         this.drawWigglyLine({
@@ -76,6 +100,10 @@ export class CrabLine {
         if (this.bait) { // align bate to end of string
             this.bait.x = this.endPoint.x - 1;
             this.bait.y = this.endPoint.y + 1;
+        }
+        if (this.reeling) {
+            this.spool.draw();
+            this.spool.static = false;
         }
 
     }
@@ -115,7 +143,10 @@ export class CrabLine {
     showActions() {
         this.hideActions();
         if (this.casting) return;
-        if (this.casted) {
+        if (this.reeling) return;
+        if (this.reeled) {
+            this.actions.grabCrab.hidden = false;
+        } else if  (this.casted) {
             this.actions.reelLine.hidden = false;
         } else if (STORE.character.child && STORE.character.child.type.includes('bait') && !this.bait) { // character holding bait and I do not have bait attached
             this.actions.attachBait.hidden = false;
@@ -130,6 +161,7 @@ export class CrabLine {
         this.actions.attachBait.hidden = true;
         this.actions.castLine.hidden = true;
         this.actions.reelLine.hidden = true;
+        this.actions.grabCrab.hidden = true;
     }
 }
 

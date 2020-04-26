@@ -8,10 +8,9 @@ import { STORE } from './store.js';
 
 export function initNewGame() {
     STORE.character = new Character();
-    STORE.spool = new Spool({x: 216, y: 3});
 
-    new CrabLine({x: 120, y: 73}); // todo make crablines at the bottom always
     new Crab({x: 35, y: 146});
+    new CrabLine({x: 120, y: 73}); // todo make crablines at the bottom always
     new Bait({x: 90, y: 75, type: 'bacon'});
 
     // new Button({x: 11, y: 25, spriteHeight: 14, spriteWidth: 50, imageId: 'button-large', arrayToAddTo: STORE.buttons, 
