@@ -184,6 +184,9 @@ function interactMove(x, y, hoverEnabled){
             hoverItem.startHover();
         }
     }
+    else if (draggingItem) {
+        canvasElement.style.cursor = "pointer";
+    }
     else {
         canvasElement.style.cursor = "auto"
         STORE.somethingIsHovering = false;
