@@ -188,7 +188,7 @@ export function drawAsset(context, asset, small) {
             );
         }
     }
-    if (asset.hasOwnProperty('text') && !small) {
+    if (asset.text && !small) {
         drawText(asset.text);
     }
 }
