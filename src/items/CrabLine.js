@@ -30,7 +30,9 @@ export class CrabLine {
             grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
-                    console.log('crab-line')
+                    this.grabbable = false;
+                    this.parent = STORE.character;
+                    STORE.character.child = this;
                 }
             }),
             attachBait: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
@@ -67,6 +69,12 @@ export class CrabLine {
         STORE.items.push(this);
     }
     update(){
+        this.draw();
+
+        if (this.parent){
+            this.alignToParent();
+        }
+
         if (this.casting) {
             this.endPoint.y += this.dropSpeed; // animate string down
             if (this.endPoint.y >= this.endPoint.finalY) {
@@ -75,7 +83,7 @@ export class CrabLine {
                 STORE.availableLines.push(this);
             }
         }
-        this.draw();
+
         if (this.reeling){
             if (this.spool.status === this.spool.statuses.green){
                 this.endPoint.y-= this.raiseSpeed;
@@ -163,6 +171,14 @@ export class CrabLine {
         this.actions.castLine.hidden = true;
         this.actions.reelLine.hidden = true;
         this.actions.grabCrab.hidden = true;
+    }
+    alignToParent() {
+        switch(this.parent.type) {
+            case 'character': 
+                this.y = 52;
+                this.x = this.parent.directionFacing === 'right' ? this.parent.x + 20 : this.parent.x - 2;
+                break;
+        }
     }
 }
 
