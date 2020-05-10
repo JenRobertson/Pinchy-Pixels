@@ -4,6 +4,8 @@ let progress = 0;
 let numberOfImagesToLoad = 0;
 let progressToAdd;
 
+document.fonts.load('1px "smallest-pixel-7"'); // preload font
+
 const sprites = importAllImages([
     require.context('./assets/img', false, /\.(png|jpe?g|svg)$/),
     // require.context('./assets/img/generated', false, /\.(png|jpe?g|svg)$/),
