@@ -16,6 +16,7 @@ export let STORE = {
     },
     items: [],
     buttons: [],
-    clickable: []
+    clickable: [],
+    availableLines: []
 }
 

@@ -28,7 +28,7 @@ export class Crab {
                 row: {direction: { left: 0, right: 0}},
                 numberOfFrames: 5,
                 spriteSpeed: 0.5,
-                speed: 0.5,
+                speed: 1,
             }
         };
         this.state = this.states.idle;
@@ -42,9 +42,18 @@ export class Crab {
             case 'walking':
                 break;
             case 'idle':
-                this.nextState = this.states.walking;
-                this.nextDestinationX = randomIntFromInterval(STORE.areas.sand.left, (STORE.areas.sand.right - this.spriteWidth));
-                this.nextDestinationY = randomIntFromInterval(133, STORE.areas.sand.bottom - this.spriteHeight);
+                // find some food?
+                if (STORE.availableLines.length) { // theres some bait
+                    this.nextState = this.states.walking;
+                    this.desiredLine = STORE.availableLines[0];
+
+                    this.nextDestinationX = this.desiredLine.endPoint.x -15;
+                    this.nextDestinationY = this.desiredLine.endPoint.y -7;
+                } else {
+                    this.nextState = this.states.walking;
+                    this.nextDestinationX = randomIntFromInterval(STORE.areas.sand.left, (STORE.areas.sand.right - this.spriteWidth));
+                    this.nextDestinationY = randomIntFromInterval(133, STORE.areas.sand.bottom - this.spriteHeight);
+                }
                 break;
         }
     };

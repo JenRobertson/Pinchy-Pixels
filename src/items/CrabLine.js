@@ -72,6 +72,7 @@ export class CrabLine {
             if (this.endPoint.y >= this.endPoint.finalY) {
                 this.casting = false;
                 this.casted = true;
+                STORE.availableLines.push(this);
             }
         }
         this.draw();
