@@ -31,6 +31,9 @@ export class Bait {
             this.alignToParent();
         }
     }
+    casted() {
+        
+    }
     alignToParent() {
         switch(this.parent.type) {
             case 'character': 

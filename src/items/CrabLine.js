@@ -33,8 +33,15 @@ export class CrabLine {
                     this.grabbable = false;
                     this.parent = STORE.character;
                     STORE.character.child = this;
+                    this.showActions();
                 }
             }),
+            place: new Button({ hidden: false, x: 10, y: 10 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-large', arrayToAddTo: STORE.buttons, 
+                text: { text: 'Place crab line', offsetX: 2, offsetY: 9, size: 7 },
+                clicked: () => {
+
+                }
+            }),            
             attachBait: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Attach bait', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
@@ -153,7 +160,11 @@ export class CrabLine {
         this.hideActions();
         if (this.casting) return;
         if (this.reeling) return;
-        if (this.reeled) {
+        if (this.parent) {
+            console.log('jen')
+            this.actions.place.hidden = false;
+            console.log(this.actions.place.hidden)
+        } else if (this.reeled) {
             this.actions.grabCrab.hidden = false;
         } else if  (this.casted) {
             this.actions.reelLine.hidden = false;
@@ -167,6 +178,7 @@ export class CrabLine {
     }
     hideActions() {
         this.actions.grab.hidden = true;
+        this.actions.place.hidden = true;
         this.actions.attachBait.hidden = true;
         this.actions.castLine.hidden = true;
         this.actions.reelLine.hidden = true;
