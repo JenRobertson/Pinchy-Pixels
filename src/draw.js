@@ -198,6 +198,9 @@ export function drawAssets (assetsObject) {
     if (Array.isArray(assetsObject)){
         for (var i = 0; i < assetsObject.length; i++) {
             var asset = assetsObject[i];
+            if (asset.delete){
+                assetsObject.splice(i, 1);
+            }
             drawAsset(STORE.ctx, asset);
             if (asset.update && (!STORE.isPaused || asset.type === 'button')) { // update menu button rollovers even when paused
                 asset.update();

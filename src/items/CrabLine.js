@@ -70,6 +70,8 @@ export class CrabLine {
                     this.showActions();
                     this.crab.parent = STORE.character;
                     STORE.character.child = this.crab;
+                    this.bait.delete = true;
+                    this.bait = null;
                 }
             })
         }
