@@ -15,9 +15,21 @@ export class Crab {
         this.spriteWidth = 42;
         this.spriteHeight = 35;
 
+        this.lineOffset = {
+            x: -15,
+            y: -7
+        }
+
         this.states = {
             idle: {
                 type: 'idle',
+                row: {direction: { left: 0, right: 0}},
+                numberOfFrames: 1,
+                spriteSpeed: 0.1,
+                speed: 0.1,
+            },
+            beingReeled: {
+                type: 'beingReeled',
                 row: {direction: { left: 0, right: 0}},
                 numberOfFrames: 1,
                 spriteSpeed: 0.1,
@@ -41,14 +53,24 @@ export class Crab {
         switch(this.state.type) {
             case 'walking':
                 break;
+            case 'beingReeled':
+                break;
             case 'idle':
+                if (this.desiredLine) { // arrived at bait on the sand
+                    this.nextState = this.states.beingReeled;
+                    this.desiredLine.crab = this;
+                    this.parent = this.desiredLine.endPoint;
+                    return;
+                }
                 // find some food?
                 if (STORE.availableLines.length) { // theres some bait
                     this.nextState = this.states.walking;
                     this.desiredLine = STORE.availableLines[0];
+                    // make line unavailable
+                    STORE.availableLines.shift();
 
-                    this.nextDestinationX = this.desiredLine.endPoint.x -15;
-                    this.nextDestinationY = this.desiredLine.endPoint.y -7;
+                    this.nextDestinationX = this.desiredLine.endPoint.x + this.lineOffset.x;
+                    this.nextDestinationY = this.desiredLine.endPoint.y + this.lineOffset.y;
                 } else {
                     this.nextState = this.states.walking;
                     this.nextDestinationX = randomIntFromInterval(STORE.areas.sand.left, (STORE.areas.sand.right - this.spriteWidth));
@@ -87,6 +109,22 @@ export class Crab {
             this.checkIfAtDestination();
         }
         this.useNextState();
-
+        
+        if (this.parent){
+            this.alignToParent();
+        }
     };
+
+    alignToParent() {
+        switch(this.parent.type) {
+            case 'lineEndPoint': 
+                this.x = this.parent.x + this.lineOffset.x;
+                this.y= this.parent.y + this.lineOffset.y;
+                break;
+            case 'character': 
+                this.x = this.parent.directionFacing === 'right' ? this.parent.x + 7 : this.parent.x - 15;
+                this.y = this.parent.y + 10;
+                break;
+        }
+    }
 }

@@ -19,7 +19,7 @@ export class CrabLine {
         this.raiseSpeed = 0.5;
 
         this.stringOffset = {x: 4, y: 4}; // where string starts from on crabline
-        this.endPoint = {x: this.x, y: this.y, finalY: 155};
+        this.endPoint = {x: this.x, y: this.y, finalY: 155, type: 'lineEndPoint'};
         this.wiggleSpeed = 0.2; // how fast string wiggles
         this.sineAmplitude = 0; // used to control wiggle
         this.sineDirection = this.wiggleSpeed; // also controls wiggle
@@ -68,7 +68,8 @@ export class CrabLine {
                 text: { text: 'Grab crab', offsetX: 3, offsetY: 12, size: 7 },
                 clicked: () => {
                     this.showActions();
-                    
+                    this.crab.parent = STORE.character;
+                    STORE.character.child = this.crab;
                 }
             })
         }
