@@ -4,7 +4,6 @@ import { STORE } from './store.js';
 import { CONFIG } from './config.js';
 import { drawAsset, drawAssets, drawAssetRotated, drawLoadingBar, animateAssets } from './draw.js';
 import { initNewGame } from './init.js'
-import { Spool } from './items/Spool.js';
 
 var gtx, c, draggingItem, dragOffsetX, dragOffsetY;
 var HEIGHT = 181 * STORE.increase;
@@ -90,7 +89,7 @@ function getItemUnderCursorFromArray(array) {
         const smallCursorY = STORE.cursorY / STORE.increase;
 
         // if (asset.type !== 'static' && checkIfAllowedInTutorial(asset)) {
-        if (asset.type !== 'static') {
+        if (asset.type !== 'static' && !asset.hidden) {
             const withinLeft = smallCursorX > asset.left() - 20;
             const withinRight = smallCursorX < asset.right() + 20;
             const withinTop = smallCursorY > asset.top() - 20;

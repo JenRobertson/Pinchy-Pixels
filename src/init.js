@@ -1,4 +1,3 @@
-import { Spool } from './items/Spool.js';
 import { Crab } from './items/Crab.js';
 import { Character } from './items/Character.js';
 import { Bait } from './items/Bait.js';
