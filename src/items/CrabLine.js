@@ -29,6 +29,7 @@ export class CrabLine {
         this.actions = {
             grab: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Grab crab line', offsetX: 3, offsetY: 12, size: 7 },
+                itemParent: this, xOffset: -18,
                 clicked: () => {
                     this.grabbable = false;
                     this.parent = STORE.character;
@@ -39,16 +40,19 @@ export class CrabLine {
             place: new Button({ hidden: true, x: 10, y: 10 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-large', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Place crab line', offsetX: 2, offsetY: 9, size: 7 },
                 clicked: () => {
+                    this.grabbable = true;
                     this.actions.place.hidden = true;
                     STORE.character.child = null;
                     this.parent = null;
-                    this.y = STORE.areas.jetty.top - this.spriteHeight;
+                    this.y = STORE.areas.jetty.top - this.spriteHeight;                  
                     this.showActions();
                 }
             }),            
             attachBait: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Attach bait', offsetX: 3, offsetY: 12, size: 7 },
+                itemParent: this, xOffset: -13,
                 clicked: () => {
+                    this.aaacheese = true;
                     this.bait = STORE.character.child;
                     this.bait.parent = this;
                     STORE.character.child = null;
@@ -57,6 +61,7 @@ export class CrabLine {
             }),
             castLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Cast crab line', offsetX: 3, offsetY: 12, size: 7 },
+                itemParent: this, xOffset: -18,
                 clicked: () => {
                     this.casting = true;
                     this.showActions();
@@ -64,12 +69,14 @@ export class CrabLine {
             }),
             reelLine: new Button({ hidden: true, x: this.x - 18, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-medium-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Reel crab line', offsetX: 3, offsetY: 12, size: 7 },
+                itemParent: this, xOffset: -18,
                 clicked: () => {
                     this.reeling = true;
                 }
             }),
             grabCrab: new Button({ hidden: true, x: this.x - 13, y: 86 , spriteHeight: 17, spriteWidth: 51, imageId: 'button-small-arrow', arrayToAddTo: STORE.buttons, 
                 text: { text: 'Grab crab', offsetX: 3, offsetY: 12, size: 7 },
+                itemParent: this, xOffset: -13,
                 clicked: () => {
                     this.showActions();
                     this.crab.parent = STORE.character;
@@ -126,7 +133,9 @@ export class CrabLine {
         }
         if (this.reeling) {
             this.spool.draw();
-            this.spool.static = false;
+            this.spool.hidden = false;
+        } else {
+            this.spool.hidden = true;
         }
 
     }

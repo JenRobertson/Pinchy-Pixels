@@ -49,7 +49,6 @@ export class Character {
         } else {
             this.state = this.states.idle;
         }
-        this.updateItemsOnJetty();
     }
 
     updateItemsOnJetty() {
@@ -58,7 +57,7 @@ export class Character {
 
         // show actions for item
         if (this.itemWalkedOver) {
-            this.itemWalkedOver.showActions();
+            this.itemWalkedOver.showActions('jetty');
         }
         // hide previous items actions
         if (this.prevItemWalkedOver && this.prevItemWalkedOver !== this.itemWalkedOver ) {
@@ -94,11 +93,13 @@ export class Character {
             this.x -= this.states.walking.speed;
             this.directionFacing = 'left';
             this.isWalking = true;
+            this.updateItemsOnJetty();
         } else if (this.keyPresses.d || this.keyPresses.ArrowRight) {
             if (this.x > STORE.areas.jetty.right - this.spriteWidth) return;
             this.x += this.states.walking.speed;
             this.directionFacing = 'right';
             this.isWalking = true;
+            this.updateItemsOnJetty();
         } else {
             this.isWalking = false;
         }

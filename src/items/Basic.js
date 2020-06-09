@@ -80,9 +80,11 @@ export class Static extends Basic {
 }
 
 export class Button extends Basic {
-    constructor({x, y, spriteHeight, spriteWidth, imageId, arrayToAddTo, clicked, text, hidden}) {
+    constructor({x, y, spriteHeight, spriteWidth, imageId, arrayToAddTo, clicked, text, hidden, itemParent, xOffset}) {
         super(x, y, spriteHeight, spriteWidth, imageId);
         this.type = 'button';
+        this.itemParent = itemParent;
+        this.xOffset = xOffset;
         this.hidden = hidden;
         this.text = text;
         this.clicked = clicked;
@@ -109,7 +111,17 @@ export class Button extends Basic {
         }
     };
 
+    updateLocation() {
+        if (this.itemParent) { // align button with item when item moves
+            this.x = this.itemParent.x + this.xOffset;
+            if (this.text) {
+                this.text.x = this.x + this.text.offsetX;
+            }
+        }
+    }
+
     update() {
+        this.updateLocation();
         if (!STORE.somethingIsHovering) {
             this.spriteSheet = this.defaultSprite;
         }
