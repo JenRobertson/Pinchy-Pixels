@@ -43,6 +43,7 @@ export class Character {
         this.keyPresses = {};
     }
     update() {
+        this.updateItemsOnJetty();
         this.handleKeyPresses();
         if (this.isWalking) {
             this.state = this.states.walking;
@@ -93,13 +94,11 @@ export class Character {
             this.x -= this.states.walking.speed;
             this.directionFacing = 'left';
             this.isWalking = true;
-            this.updateItemsOnJetty();
         } else if (this.keyPresses.d || this.keyPresses.ArrowRight) {
             if (this.x > STORE.areas.jetty.right - this.spriteWidth) return;
             this.x += this.states.walking.speed;
             this.directionFacing = 'right';
             this.isWalking = true;
-            this.updateItemsOnJetty();
         } else {
             this.isWalking = false;
         }

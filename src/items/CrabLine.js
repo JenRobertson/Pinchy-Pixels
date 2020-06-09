@@ -44,7 +44,11 @@ export class CrabLine {
                     this.actions.place.hidden = true;
                     STORE.character.child = null;
                     this.parent = null;
-                    this.y = STORE.areas.jetty.top - this.spriteHeight;                  
+                    this.y = STORE.areas.jetty.top - this.spriteHeight;
+                    // update items to new location                  
+                    this.endPoint.x = this.x;
+                    this.endPoint.y = this.y;
+                    this.spool.x = this.x + 30;
                     this.showActions();
                 }
             }),            
@@ -52,7 +56,6 @@ export class CrabLine {
                 text: { text: 'Attach bait', offsetX: 3, offsetY: 12, size: 7 },
                 itemParent: this, xOffset: -13,
                 clicked: () => {
-                    this.aaacheese = true;
                     this.bait = STORE.character.child;
                     this.bait.parent = this;
                     STORE.character.child = null;
@@ -205,5 +208,6 @@ export class CrabLine {
                 break;
         }
     }
+
 }
 
