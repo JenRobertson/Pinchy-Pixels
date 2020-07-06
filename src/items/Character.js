@@ -68,7 +68,7 @@ export class Character {
 
     getItemWalkedOver() {
         const leftBoundry = this.x - 5;
-        const rightBoundry = this.x + 15;
+        const rightBoundry = this.x + 22;
         // item must have grabbable true to be selected
         const withinRange = STORE.items.filter(item => item.grabbable && item.x > leftBoundry && item.x < rightBoundry);
         
